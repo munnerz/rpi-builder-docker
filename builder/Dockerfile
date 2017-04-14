@@ -3,16 +3,16 @@
 #
 # If you're already running Linux with Docker installed
 # and configured, you shouldn't need this image
-FROM docker:dind
+FROM ubuntu:16.04
 
-RUN apk update \
-	&& apk add \
+RUN apt-get update \
+	&& apt-get install -y \
+		parted \
 		curl \
 		make \
 		rsync \
-		parted \
 		dosfstools \
-		multipath-tools # for kpartx
+		udev
 
 ADD . /build
 

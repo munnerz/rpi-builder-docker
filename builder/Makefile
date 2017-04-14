@@ -8,7 +8,7 @@ IMG_DIR?=${OUT_DIR}/img
 IMG_OUT?=${IMG_DIR}/rpi.img
 
 LO_DEV:=$(shell losetup -f)
-DEV_PREFIX:=$(shell losetup -f | sed 's/dev/dev\/mapper/g')
+DEV_PREFIX:=$(shell losetup -f)
 
 MOUNT_DIR?=${OUT_DIR}/mnt
 ROOTFS_MOUNT_DIR=${MOUNT_DIR}/rootfs
@@ -31,7 +31,7 @@ partitionimg: mkimg
 	parted "${IMG_OUT}" set 1 boot on
 	parted "${IMG_OUT}" print
 	# format partitions
-	kpartx -s -a "${IMG_OUT}"
+	losetup --show -f -P "${IMG_OUT}"
 	mkfs.fat -F 32 "${DEV_PREFIX}p1"
 	mkfs.ext4 "${DEV_PREFIX}p2"
 
@@ -52,5 +52,4 @@ img: write-rootfs write-bootfs
 	# unmount partitions
 	umount "${ROOTFS_MOUNT_DIR}"
 	umount "${BOOT_MOUNT_DIR}"
-	kpartx -s -d "${LO_DEV}"
-
+	losetup -d "${LO_DEV}"
