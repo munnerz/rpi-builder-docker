@@ -9,5 +9,4 @@ This is great for creating a stable RPi environment that can be reproduced again
 
 Requirements:
 
-guestfish
 docker
